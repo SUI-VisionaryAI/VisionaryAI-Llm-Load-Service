@@ -1,5 +1,14 @@
+import os
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
-client = MongoClient("mongodb://localhost:27017")
-db = client["llmService"]
+# Load environment variables from .env file
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGODB_URI")
+MONGO_DB = os.getenv("MONGODB_DB")
+
+client = MongoClient(MONGO_URI)
+db = client[MONGO_DB]
+
 models = db["aimodels"]
