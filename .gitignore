@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# FastAPI/UVicorn
+.env
+*.log
+
+# Virtualenv
+venv/
+.venv/
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# Mac/Linux
+.DS_Store
+
+# Jupyter (if used for testing)
+.ipynb_checkpoints/
+
+# Model files (e.g., transformers or GGUF)
+models/
+*.bin
+*.pt
+*.gguf
+*.safetensors
+
+# MongoDB dump/backups (optional)
+dump/
