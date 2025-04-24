@@ -2,14 +2,20 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
 def chat(prompt, history=[]):
-    model_path = "models/tinyllama"
+    model_path = "models/680a603777d8155cd4a7ec9b_680a613877d8155cd4a7ec9e"
+
+    # Check if CUDA is available
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"[INFO] Using device: {device}")
 
     # Load tokenizer and model
     tokenizer = AutoTokenizer.from_pretrained(model_path)
-    model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16)
+    model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16 if device.type == "cuda" else torch.float32)
+    model.to(device)
     model.eval()
+    print(f"[INFO] Model loaded to device: {next(model.parameters()).device}")
 
-    # Prepare the input
+    # Prepare input prompt
     messages = history + [{"role": "user", "content": prompt}]
     prompt_text = ""
     for msg in messages:
@@ -20,7 +26,8 @@ def chat(prompt, history=[]):
         elif role == "assistant":
             prompt_text += f"<|assistant|>{content}<|end|>"
 
-    input_ids = tokenizer(prompt_text, return_tensors="pt").input_ids
+    input_ids = tokenizer(prompt_text, return_tensors="pt").input_ids.to(device)
+    print(f"[INFO] Input tensor device: {input_ids.device}")
 
     # Generate response
     with torch.no_grad():
